@@ -1,9 +1,9 @@
 const config = {
-    user: 'SA',
-    password: '<@Test_db>',
-    server: 'localhost',
-    database: 'aqi_db',
-    port: 1433,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.db_host,
+    database: process.env.DB_DATABASE,
+    port: parseInt(process.env.DB_PORT),
     options: {
         encrypt: true,
         trustServerCertificate: true
