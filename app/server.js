@@ -3,7 +3,7 @@ import linebotRoutes from '../controllers/linebot.js';
 import express from 'express';
 import viteExpress from 'vite-express';
 import sql from 'mssql';
-import '../services/line-bot.js';
+import '../services/linebot.js';
 import config from '../infrastructure/SQLconfig.js';
 const app = express();
 

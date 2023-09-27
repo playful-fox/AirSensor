@@ -2,7 +2,7 @@ import { Router } from "express";
 import client from "../infrastructure/linebot.js";
 import {middleware} from "@line/bot-sdk";
 import { config as configLinebot} from "../infrastructure/linebot.js";
-import {handleArduino, handleText, query} from "../services/line-bot.js";
+import {handleArduino, handleText, query} from "../services/linebot.js";
 const router = Router();
 
 
