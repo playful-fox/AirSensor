@@ -10,9 +10,9 @@ async function autoUpload(time, userID = null) {
         const query = `
             SELECT *
             FROM Data
-                     inner join Access on Data.UP_EQU = Access.USER_EQU
+            inner join Access on Data.UP_EQU = Access.USER_EQU
             WHERE UP_DATE BETWEEN @startDate AND @endDate
-              AND (@userID IS NULL OR Access.USER_ID = @userID)
+            AND (@userID IS NULL OR Access.USER_ID = @userID)
             ORDER BY UP_DATE DESC;`
         const result = await new Promise((resolve, reject) => {
             pool.request()
@@ -138,6 +138,60 @@ export async function query(event) {
     } catch (error) {
         console.error("Error Cronjob", error);
         return {type: 'text', text: '查詢錯誤'};
+    }
+}
+
+
+export async function checkThreshold(event) {
+    try {
+        const thresholds = {
+            CO: 10,
+            CL2: 10,
+            TEMP: 10,
+            RH: 10,
+            PM1_0: 10,
+            PM2_5: 10,
+            PM10: 10,
+        };
+
+        let threshold = {};
+
+        for (const property in thresholds) {
+            if (event[property] > thresholds[property]) {
+                threshold[property] = event[property];
+            }
+        }
+        if (threshold !== {}){
+            const pool = await sql.connect(config);
+            const query = `SELECT USER_ID FROM Access WHERE USER_EQU = @UP_EQU ;`
+            const result = await new Promise((resolve, reject) => {
+                pool.request()
+                    .input('UP_EQU', sql.Char, event.UP_EQU)
+                    .query(query, (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const message = "以下檢測數值超標：\n";
+            threshold.Time = moment(new Date()).format('YYYY-MM-DD HH:mm');
+            const thresholdString = Object.entries(threshold)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('\n');
+            client.pushMessage(result.recordset[0].USER_ID, {
+                type: 'text',
+                text: message + thresholdString
+            });
+
+        }
+        console.log('Thresholds:', threshold);
+
+    } catch (error) {
+        console.error("Error checkThreshold", error);
+    } finally {
+    sql.close();
     }
 }
 

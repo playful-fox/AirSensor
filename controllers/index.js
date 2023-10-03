@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 // eslint-disable-next-line no-unused-vars
 import sql from "mssql";
+import {checkThreshold} from "../services/linebot.js";
 const router = Router();
 
 router.use(express.json());
@@ -22,7 +23,6 @@ router.post("/records", async (req, res) => {
     try {
         const pool = req.app.locals.pool;
         const newRecord = req.body;
-
         const query = `INSERT INTO Data (CL2, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU) VALUES (@CL2, @CO, @TEMP, @RH, @PM1_0, @PM2_5, @PM10, @UP_EQU);`;
         const result = await pool.request()
             .input('CL2', sql.Int, newRecord.CL2)
@@ -34,7 +34,8 @@ router.post("/records", async (req, res) => {
             .input('PM10',sql.Int, newRecord.PM10)
             .input('UP_EQU',sql.NVarChar, newRecord.UP_EQU)
             .query(query);
-        console.log("Query Result: ", result); // 印出查詢結果，方便除錯
+        //console.log("Query Result: ", result); // 印出查詢結果，方便除錯
+        checkThreshold(newRecord);
 
         res.json({ success: true, message: 'Insert successful' });
     } catch (err) {
