@@ -3,6 +3,7 @@ import client from "../infrastructure/linebot.js";
 import config from '../infrastructure/SQLconfig.js';
 import sql from "mssql";
 import moment from "moment";
+import thresholds from '../infrastructure/AirThresholds.js';
 
 async function autoUpload(time, userID = null) {
     try {
@@ -144,16 +145,6 @@ export async function query(event) {
 
 export async function checkThreshold(event) {
     try {
-        const thresholds = {
-            CO: 10,
-            CL2: 10,
-            TEMP: 10,
-            RH: 10,
-            PM1_0: 10,
-            PM2_5: 10,
-            PM10: 10,
-        };
-
         let threshold = {};
 
         for (const property in thresholds) {
