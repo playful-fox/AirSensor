@@ -33,8 +33,6 @@ async function autoUpload(time, userID = null) {
         return result;
     } catch (error) {
         console.error("Error updating user", error);
-    } finally {
-        sql.close();
     }
 }
 
@@ -105,8 +103,6 @@ export async function handleArduino(event) {
         console.log("Update successful", result);
     } catch (error) {
         console.error("Error updating user", error);
-    } finally {
-        sql.close();
     }
     return echo;
 }
@@ -181,8 +177,6 @@ export async function checkThreshold(event) {
 
     } catch (error) {
         console.error("Error checkThreshold", error);
-    } finally {
-    sql.close();
     }
 }
 
