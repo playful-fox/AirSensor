@@ -48,7 +48,7 @@ const job = new CronJob(
                     if (!processUserEque[row.USER_EQU] && row.USER_ID !== null) {
                         const messageText = [];
                         messageText.push(
-                            `CL2: ${row.CL2}`,
+                            `O3: ${row.O3}`,
                             `CO: ${row.CO}`,
                             `Temperature: ${row.TEMP}`,
                             `Humidity: ${row.RH}`,
@@ -116,7 +116,7 @@ export async function query(event) {
         if (row.rowsAffected > 0) {
             const messageText = [];
             messageText.push(
-                `CL2: ${row.recordset[0].CL2}`,
+                `O3: ${row.recordset[0].O3}`,
                 `CO: ${row.recordset[0].CO}`,
                 `Temperature: ${row.recordset[0].TEMP}`,
                 `Humidity: ${row.recordset[0].RH}`,
@@ -145,6 +145,9 @@ export async function checkThreshold(event) {
 
         for (const property in thresholds) {
             if (event[property] > thresholds[property]) {
+                threshold[property] = event[property];
+            }
+            if (property === "RH" && event[property] < 30){
                 threshold[property] = event[property];
             }
         }

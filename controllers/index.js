@@ -9,7 +9,7 @@ router.use(express.json());
 router.get("/records", async (req, res) => {
     try {
         const pool = req.app.locals.pool;
-        const result = await pool.request().query('SELECT CL2, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_DATE from Data');
+        const result = await pool.request().query('SELECT O3, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_DATE from Data');
         console.log(result);
         res.json(result.recordset)
     } catch (err) {
@@ -23,9 +23,9 @@ router.post("/records", async (req, res) => {
     try {
         const pool = req.app.locals.pool;
         const newRecord = req.body;
-        const query = `INSERT INTO Data (CL2, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU) VALUES (@CL2, @CO, @TEMP, @RH, @PM1_0, @PM2_5, @PM10, @UP_EQU);`;
+        const query = `INSERT INTO Data (O3, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU) VALUES (@O3, @CO, @TEMP, @RH, @PM1_0, @PM2_5, @PM10, @UP_EQU);`;
         const result = await pool.request()
-            .input('CL2', sql.Int, newRecord.CL2)
+            .input('O3', sql.Int, newRecord.O3)
             .input('CO', sql.Int, newRecord.CO)
             .input('TEMP',sql.Int, newRecord.TEMP)
             .input('RH',sql.Int, newRecord.RH)

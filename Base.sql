@@ -13,7 +13,7 @@ USE aqi_db;
 CREATE TABLE Data
 (
     ID INT IDENTITY(1,1),
-    CL2 int,
+    O3 int,
     CO int,
     TEMP int,
     RH int,
@@ -31,7 +31,7 @@ CREATE TABLE Access
 )
     GO
 INSERT INTO Data
-( CL2, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU)
+( O3, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU)
 VALUES
 ( 1, 2, 3, 4, 5, 6, 7, 'AAA-111AAA-AAA')
 GO
