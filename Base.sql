@@ -17,9 +17,9 @@ CREATE TABLE Data
     CO float,
     TEMP float,
     RH float,
-    PM1_0 float,
-    PM2_5 float,
-    PM10 float,
+    PM1_0 int,
+    PM2_5 int,
+    PM10 int,
     UP_DATE DATETIME DEFAULT GETDATE(),
     UP_EQU CHAR(50)
 );
