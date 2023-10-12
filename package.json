@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node -r dotenv/config app/server.js"
+    "start": "TZ=Asia/Taipei node -r dotenv/config app/server.js"
   },
   "dependencies": {
     "@line/bot-sdk": "^7.7.0",

@@ -25,10 +25,10 @@ router.post("/records", async (req, res) => {
         const newRecord = req.body;
         const query = `INSERT INTO Data (O3, CO, TEMP, RH, PM1_0, PM2_5, PM10, UP_EQU) VALUES (@O3, @CO, @TEMP, @RH, @PM1_0, @PM2_5, @PM10, @UP_EQU);`;
         const result = await pool.request()
-            .input('O3', sql.Int, newRecord.O3)
-            .input('CO', sql.Int, newRecord.CO)
-            .input('TEMP',sql.Int, newRecord.TEMP)
-            .input('RH',sql.Int, newRecord.RH)
+            .input('O3', sql.Float, newRecord.O3)
+            .input('CO', sql.Float, newRecord.CO)
+            .input('TEMP',sql.Float, newRecord.TEMP)
+            .input('RH',sql.Float, newRecord.RH)
             .input('PM1_0',sql.Int, newRecord.PM1_0)
             .input('PM2_5',sql.Int, newRecord.PM2_5)
             .input('PM10',sql.Int, newRecord.PM10)

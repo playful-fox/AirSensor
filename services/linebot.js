@@ -15,6 +15,7 @@ async function autoUpload(time, userID = null) {
             WHERE UP_DATE BETWEEN @startDate AND @endDate
             AND (@userID IS NULL OR Access.USER_ID = @userID)
             ORDER BY UP_DATE DESC;`
+	console.log(time,userID);
         const result = await new Promise((resolve, reject) => {
             pool.request()
                 .input('startDate', sql.DateTime, moment(time).subtract(10, 'minutes').toDate())
@@ -26,7 +27,7 @@ async function autoUpload(time, userID = null) {
                         console.log("Query Result: ", err); // 印出查詢結果，方便除錯
                     } else {
                         resolve(result);
-                        //console.log("Query Result: ", result); // 印出查詢結果，方便除錯
+                        console.log("Query Result: ", result); // 印出查詢結果，方便除錯
                     }
                 });
         });
