@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  airsensor:
+    build: "."
+    restart: unless-stopped
+    env_file: ".env"
+    ports:
+      - "3022:3022"
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    env_file: ".env"
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: <YourStrong@Passw0rd>
+    volumes:
+      - "./data:/var/opt/mssql"
