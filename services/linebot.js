@@ -147,7 +147,7 @@ export async function checkThreshold(event) {
             if (event[property] > thresholds[property]) {
                 threshold[property] = event[property];
             }
-            if (property === "RH" && event[property] < 30){
+            if (property === "RH" && event[property] < 30.0){
                 threshold[property] = event[property];
             }
         }

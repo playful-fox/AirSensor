@@ -13,13 +13,13 @@ USE aqi_db;
 CREATE TABLE Data
 (
     ID INT IDENTITY(1,1),
-    O3 int,
-    CO int,
-    TEMP int,
-    RH int,
-    PM1_0 int,
-    PM2_5 int,
-    PM10 int,
+    O3 float,
+    CO float,
+    TEMP float,
+    RH float,
+    PM1_0 float,
+    PM2_5 float,
+    PM10 float,
     UP_DATE DATETIME DEFAULT GETDATE(),
     UP_EQU CHAR(50)
 );
