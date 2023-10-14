@@ -152,7 +152,7 @@ export async function checkThreshold(event) {
                 threshold[property] = event[property];
             }
         }
-        if (threshold !== {}){
+        if (Object.keys(threshold).length !== 0){
             const pool = await sql.connect(config);
             const query = `SELECT USER_ID FROM Access WHERE USER_EQU = @UP_EQU ;`
             const result = await new Promise((resolve, reject) => {
