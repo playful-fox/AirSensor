@@ -44,9 +44,9 @@ const job = new CronJob(
         try {
             const currentTime = new Date();
             autoUpload(currentTime, null).then((result) => {
-                const processUserEque = {};
+                const processUserID = {};
                 for (const row of result.recordset) {
-                    if (!processUserEque[row.USER_EQU] && row.USER_ID !== null) {
+                    if (!processUserID[row.USER_ID] && row.USER_ID !== null) {
                         const messageText = [];
                         messageText.push(
                             `O3: ${row.O3}`,
@@ -62,6 +62,7 @@ const job = new CronJob(
                             type: 'text',
                             text: MergedMessageText
                         })
+                        processUserID[row.USER_ID] = true;
                     }
                 }
             });
@@ -82,10 +83,10 @@ export async function handleArduino(event) {
         const pool = await sql.connect(config);
         const query = `UPDATE Access
                        SET USER_ID = @UP_ID
-                       WHERE USER_EQU = @UP_EQU;`
+                       WHERE USER_KEY = @UP_KEY;`
         const result = await new Promise((resolve, reject) => {
             pool.request()
-                .input('UP_EQU', sql.Char, event.message.text)
+                .input('UP_KEY', sql.Char, event.message.text)
                 .input('UP_ID', sql.Char, event.source.userId)
                 .query(query, (err, result) => {
                     if (err) {
@@ -145,14 +146,14 @@ export async function checkThreshold(event) {
         let threshold = {};
 
         for (const property in thresholds) {
-            if (event[property] > thresholds[property]) {
+            if (event[property] > thresholds[property] && event[property] !== null) {
                 threshold[property] = event[property];
             }
-            if (property === "RH" && event[property] < 30.0){
+            if (property === "RH" && event[property] < 30.0 ){
                 threshold[property] = event[property];
             }
         }
-        if (Object.keys(threshold).length !== 0){
+        if (Object.keys(threshold).length !== 0 ){
             const pool = await sql.connect(config);
             const query = `SELECT USER_ID FROM Access WHERE USER_EQU = @UP_EQU ;`
             const result = await new Promise((resolve, reject) => {
@@ -171,11 +172,12 @@ export async function checkThreshold(event) {
             const thresholdString = Object.entries(threshold)
                 .map(([key, value]) => `${key}: ${value}`)
                 .join('\n');
-            client.pushMessage(result.recordset[0].USER_ID, {
-                type: 'text',
-                text: message + thresholdString
-            });
-
+            for (const row of result.recordset){
+                client.pushMessage(row.USER_ID, {
+                    type: 'text',
+                    text: message + thresholdString
+                });
+            }
         }
         console.log('Thresholds:', threshold);
 
@@ -185,6 +187,3 @@ export async function checkThreshold(event) {
 }
 
 
-export function handleText(event) {
-    return {type: 'text', text: event.message.text};
-}

@@ -2,7 +2,7 @@ import { Router } from "express";
 import client from "../infrastructure/linebot.js";
 import {middleware} from "@line/bot-sdk";
 import { config as configLinebot} from "../infrastructure/linebot.js";
-import {handleArduino, handleText, query} from "../services/linebot.js";
+import {handleArduino, query} from "../services/linebot.js";
 const router = Router();
 
 
@@ -31,13 +31,12 @@ async function handleEvent(event) {
 
         if (event.message.text.match(/[A-Z]{3}-[A-Z0-9]{6}-[A-Z]{3}/)) {
             message = await handleArduino(event);
-        } else {
-            message = handleText(event);
         }
-
-
-        if (event.message.text === 'Q' || event.message.text === 'q') {
+        else if (event.message.text === 'Q' || event.message.text === 'q') {
             message =  await query(event);
+        }
+        else {
+            return Promise.resolve(null);
         }
         // use reply API
         return client.replyMessage(event.replyToken, message);
